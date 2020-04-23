@@ -1,0 +1,69 @@
+import React from 'react';
+import axios from 'axios';
+
+export default class Review extends React.Component {
+
+  state = {
+    name: '',
+    email: '',
+    content: ''
+  }
+
+  handleInputChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  handleSubmit = event => {
+
+    event.preventDefault();
+
+    const BOOK_ID = this.props.bookId;
+    //console.log(BOOK_ID);
+
+    const review = {
+      name: this.state.name,
+      email: this.state.email,
+      content: this.state.content
+    };
+
+    const options = {
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    axios.post(`http://localhost:8000/api/books/${BOOK_ID}/reviews`, review, options)
+      .then(res => {
+        //console.log(res);
+        //console.log(res.data);
+        this.props.addReview(res.data);
+        this.props.hideReviewForm();
+      })
+      .catch(error => {
+        throw(error);
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+            <div className="form-group">
+                <label>Person Name:</label>
+                <input type="text" className="form-control" name="name" onChange={this.handleInputChange} />
+            </div>
+            <div className="form-group">
+                <label>Person Email:</label>
+                <input type="text" className="form-control" name="email" onChange={this.handleInputChange} />
+            </div>
+            <div className="form-group">
+                <label>Review:</label>
+                <input type="text" className="form-control" name="content" onChange={this.handleInputChange} />
+            </div>
+            <button  type="submit" className="btn btn-primary">Add</button>
+        </form>
+      </div>
+    )
+  }
+  
+}
