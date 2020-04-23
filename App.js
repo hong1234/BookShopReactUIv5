@@ -15,7 +15,7 @@ export default function App() {
     return (
 		<div>
 	    	<aside>
-	        	<Link to={'/'}>Shop</Link> | <Link to={'/admin'}>Admin</Link>
+	        	<Link to={'/'}>Shop</Link> | <Link to={'/admin'}>Add-Book</Link>
 	    	</aside>
 	    	<main>
 				<Switch>
