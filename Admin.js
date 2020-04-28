@@ -19,7 +19,7 @@ export default class Admin extends React.Component {
 
     event.preventDefault();
 
-    if(this.state.title.trim() && this.state.content.trim() !== null){
+    if(this.state.title.trim() !== '' && this.state.content.trim() !== ''){
 	const book = {
       	    title: this.state.title,
       	    content: this.state.content

@@ -19,7 +19,7 @@ export default class Review extends React.Component {
 
     event.preventDefault();
 
-    if(this.state.name.trim() && this.state.email.trim() && this.state.content.trim() !== null){
+    if(this.state.name.trim() !== '' && this.state.email.trim() !== '' && this.state.content.trim() !== ''){
 	const BOOK_ID = this.props.bookId;
 	const review = {
       	    name: this.state.name,
