@@ -19,29 +19,30 @@ export default class Review extends React.Component {
 
     event.preventDefault();
 
-    const BOOK_ID = this.props.bookId;
-    //console.log(BOOK_ID);
+    if(this.state.name.trim() && this.state.email.trim() && this.state.content.trim() !== null){
+	const BOOK_ID = this.props.bookId;
+	const review = {
+      	    name: this.state.name,
+            email: this.state.email,
+            content: this.state.content
+    	};
+	const options = {
+            headers: { 'Content-Type': 'application/json' }
+    	};
 
-    const review = {
-      name: this.state.name,
-      email: this.state.email,
-      content: this.state.content
-    };
-
-    const options = {
-      headers: { 'Content-Type': 'application/json' }
-    };
-
-    axios.post(`http://localhost:8000/api/books/${BOOK_ID}/reviews`, review, options)
-      .then(res => {
-        //console.log(res);
-        //console.log(res.data);
-        this.props.addReview(res.data);
-        this.props.hideReviewForm();
-      })
-      .catch(error => {
-        throw(error);
-      });
+        axios.post(`http://localhost:8000/api/books/${BOOK_ID}/reviews`, review, options)
+             .then(res => {
+        	//console.log(res.data);
+        	this.props.addReview(res.data);
+        	this.props.hideReviewForm();
+      	     })
+      	     .catch(error => {
+                throw(error);
+             });
+    } else {
+	//
+    }
+     
   }
 
   render() {

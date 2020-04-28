@@ -19,24 +19,30 @@ export default class Admin extends React.Component {
 
     event.preventDefault();
 
-    const book = {
-      title: this.state.title,
-      content: this.state.content
-    };
+    if(this.state.title.trim() && this.state.content.trim() !== null){
+	const book = {
+      	    title: this.state.title,
+      	    content: this.state.content
+    	};
 
-    const options = {
-      headers: { 'Content-Type': 'application/json' }
-    };
+    	const options = {
+      	    headers: { 'Content-Type': 'application/json' }
+    	};
 
-    axios.post(`http://localhost:8000/api/books`, book, options)
-      .then(res => {
-        //console.log(res);
-        console.log(res.data);
-        this.setState({
-          title: '',
-          content: ''
-        });
-      })
+    	axios.post(`http://localhost:8000/api/books`, book, options)
+      	     .then(res => {
+                console.log(res.data);
+                this.setState({
+                  title: '',
+                  content: ''
+                });
+             })
+
+    } else {
+	//
+    }
+
+    
   }
 
   render() {
