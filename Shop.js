@@ -1,141 +1,124 @@
-
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
-import Review from './Review.js';
+import ReviewForm from './Review.js';
 
 const apiUrl = 'http://localhost:8000/api/books/search?title=';
 
-class Shop extends React.Component {
-
-  constructor(props) {
-	  super(props);
-	  this.state = {
-	    filterText: '',
-      isSubmited: false,
-      data: [],
-      showDetail: false,
-      itemData: {},
-      showReviewForm: false
+class Shop extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterText: '',
+            data: [],
+            book: {}, 
+            isSubmited: false,
+            showDetail: false,  
+            showReviewForm: false
+        }
     }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.showDetail = this.showDetail.bind(this);
-    this.showReviewForm = this.showReviewForm.bind(this);
-    this.hideReviewForm = this.hideReviewForm.bind(this);
-    this.addReview = this.addReview.bind(this);
-  }
+    handleChange = (event) => this.setState({
+        filterText: event.target.value
+    })
 
-  handleChange(event){
-	  this.setState({
-	    filterText: event.target.value
-	  })
-  }
-
-  handleSubmit(event){
-	  const searchTerm = this.state.filterText;
-	   axios.get(`${apiUrl}${searchTerm}`)
-	        .then(response => { 
-              //console.log(response);
-		          this.setState({
-                isSubmited: true,
-                showDetail: false,
-                showReviewForm: false,
-		            data: response.data
+    handleSubmit = (event) => {
+        const searchTerm = this.state.filterText;
+        axios.get(`${apiUrl}${searchTerm}`)
+             .then(response => {
+                 this.setState({
+                     data: response.data,
+                     isSubmited: true,
+                     showDetail: false,
+                     showReviewForm: false
+                 })
               })
-            })
-          .catch(error => {
-		          throw(error);
-            });
-    event.preventDefault();
-  }
+             .catch(error => {
+	          throw(error);
+              });
+        event.preventDefault();
+    }
 
-  showDetail(current){
-    this.setState({
-      showDetail: true,
-      itemData: this.state.data[current]
-    })
-    event.preventDefault();
-  };
+    showDetail = (current) => {
+        this.setState({
+            showDetail: true,
+            showReviewForm: false,
+            book: this.state.data[current]
+        })
+        event.preventDefault();
+    }
 
-  showReviewForm(){
-    this.setState({
-      showReviewForm: !this.state.showReviewForm
-    })
-    event.preventDefault();
-  };
+    showReviewForm = () => {
+        this.setState({
+            showReviewForm: !this.state.showReviewForm
+        })
+        event.preventDefault();
+    }
 
-  hideReviewForm(){
-    this.setState({
-      showReviewForm: !this.state.showReviewForm
-    })
-  };
+    addReview = (review) => {
+        this.state.book.reviews.push(review);
+        this.setState({
+            book: this.state.book
+        })
+    }
 
-  addReview(review){
-    this.state.itemData.reviews.push(review);
-    this.setState({
-      itemData: this.state.itemData
-    })
-  };
+    hideReviewForm = () => {
+        this.setState({
+            showReviewForm: !this.state.showReviewForm
+        })
+    }
 
-  render() {
 
-    const {isSubmited, showDetail, showReviewForm} = this.state;
+    render() {
+        const {isSubmited, showDetail, showReviewForm, book} = this.state;
+
+        let search_result = <div></div>;
+        let item_detail = <div></div>;
+        let review_form = <div></div>;
+
+        if (isSubmited) {
+            search_result = <List {...this.state} showDetail={this.showDetail} />;
+        }
+
+        if (showDetail) {
+            item_detail = <Detail book={book} showReviewForm={this.showReviewForm} /> ;
+        }
+
+        if (showReviewForm) {
+            review_form = <ReviewForm bookId={book.id} hideReviewForm={this.hideReviewForm} addReview={this.addReview}/> ;
+        }
+
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-xs-12 col-sm-12 col-md-12">
+                    <br/>
+                        <h2 className="d-block p-3 bg-secondary text-white">Book Shop</h2>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-xs-12 col-sm-12 col-md-8">
+                        <SearchBar filterText={this.state.filterText} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-xs-12 col-sm-12 col-md-4">
+                        { search_result }
+                        <br/>
+                    </div>
+                    <div className="col-xs-12 col-sm-12 col-md-4">
+                        { item_detail }
+                        <br/>
+                    </div>
+                    <div className="col-xs-12 col-sm-12 col-md-4">
+                        { review_form }
+                        <br/>
+                    </div>      
+                </div>
+            </div>
+        );
+    }
     
-    let search_result = <div></div>;
-    let item_detail = <div></div>;
-    let review_form = <div></div>;
-    const book = this.state.itemData;
-
-    if (isSubmited) {
-      search_result = <List {...this.state} showDetail={this.showDetail} />;
-    }
-
-    if (showDetail) {
-      item_detail = <Detail book={book} showReviewForm={this.showReviewForm} /> ;
-    }
-
-    if (showReviewForm) {
-      review_form = <Review bookId={book.id} hideReviewForm={this.hideReviewForm} addReview={this.addReview}/> ;
-    }
-
-	  return (
-	    <div>
-
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-12">
-            <br/>
-            <h2 className="d-block p-3 bg-secondary text-white">Book Shop</h2>
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-8">
-            <SearchBar filterText={this.state.filterText} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
-          </div>
-        </div>
-
-        <div className="row">
-
-          <div className="col-xs-12 col-sm-12 col-md-4">
-            { search_result }
-            <br/>
-          </div>
-
-          <div className="col-xs-12 col-sm-12 col-md-4">
-            { item_detail }
-            <br/>
-          </div>
-
-          <div className="col-xs-12 col-sm-12 col-md-4">
-            { review_form }
-            <br/>
-          </div>
-
-        </div>
-      </div>
-	  );
-  }
 }
 
 const SearchBar =  ({

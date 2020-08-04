@@ -7,3 +7,6 @@ cd BookShopReactUIv5
 npm install
 
 npm start
+
+Note: Rest API (server-side)
+https://github.com/hong1234/sym5RestApi.git

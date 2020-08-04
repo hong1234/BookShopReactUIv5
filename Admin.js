@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
-export default class Admin extends React.Component {
+export default class Admin extends Component {
 
   state = { 
     title: '',
@@ -39,7 +38,7 @@ export default class Admin extends React.Component {
              })
 
     } else {
-	//
+	
     }
 
     
@@ -59,7 +58,6 @@ export default class Admin extends React.Component {
             </div>
             <button  type="submit" className="btn btn-primary">Add Book</button>
         </form>
-        <p><Link to="/">To Shop</Link></p>
       </div>
     )
   }

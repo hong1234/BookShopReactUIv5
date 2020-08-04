@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 
-export default class Review extends React.Component {
+export default class Review extends Component {
 
   state = {
     name: '',
@@ -50,15 +50,15 @@ export default class Review extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
             <div className="form-group">
-                <label>Person Name:</label>
+                <label>Your Name:</label>
                 <input type="text" className="form-control" name="name" onChange={this.handleInputChange} />
             </div>
             <div className="form-group">
-                <label>Person Email:</label>
+                <label>Your Email:</label>
                 <input type="text" className="form-control" name="email" onChange={this.handleInputChange} />
             </div>
             <div className="form-group">
-                <label>Review:</label>
+                <label>Your Review:</label>
                 <input type="text" className="form-control" name="content" onChange={this.handleInputChange} />
             </div>
             <button  type="submit" className="btn btn-primary">Add</button>
